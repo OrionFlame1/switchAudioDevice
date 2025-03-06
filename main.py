@@ -1,77 +1,41 @@
 import sys
-import ctypes
 from comtypes import CLSCTX_ALL
 import pystray
+from pystray import MenuItem
 from PIL import Image, ImageDraw
 from pystray import MenuItem as item
-from pycaw.pycaw import IAudioEndpointVolume, AudioUtilities, IMMDeviceEnumerator
-import sounddevice as sd
+from pycaw.pycaw import AudioUtilities
+from audioUtil import audioSwitch
+from pycaw.constants import ERole
 
+global devices
 
-def get_devices():
-    # Get all audio devices
-    devices = AudioUtilities.GetAllDevices()
+def set_device(device_name):
+    global devices
+    device_name = str(device_name)
+    print(f"SETTING DEVICE TO {device_name} - {str(devices[device_name])}")
+    audioSwitch.switchOutput(str(devices[device_name]), 2)
 
-    output_devices = {}
-    device_count = 0
+def on_exit(icon):
+    icon.stop() 
 
-    # Print the list of output devices
-    for idx, device in enumerate(devices):
-        if str(getattr(device, "state")) == "AudioDeviceState.Active" and "0.0.0" in str(getattr(device, "id")):
-            # for attr in device.__dict__:
-            #     print(attr + "->" + str(getattr(device, attr)))
+def load_icon():
+    return Image.open("icon.ico")
 
-            output_devices[device_count] = {"index": device_count, "id" : device.id, "name" : device.properties["{A45C254E-DF1C-4EFD-8020-67D146A850E0} 14"]}
-            device_count += 1
-
-    return output_devices
-
-    # {A45C254E-DF1C-4EFD-8020-67D146A850E0} 2
-    # simple name
-
-    # {B3F8FA53-0004-438E-9003-51A46E139BFC} 6
-    # more detailed name
-
-    # {A45C254E-DF1C-4EFD-8020-67D146A850E0} 14
-    # complete name
-
-def set_device(device_id):
-    print("Setting device to: " + str(device_id))
-    pass
-
-def on_exit(icon, item):
-    icon.stop()  # Stop the tray icon, effectively exiting the app
-
-# Function to generate an icon
-def create_image(width, height, color1, color2):
-    image = Image.new('RGB', (width, height), color1)
-    dc = ImageDraw.Draw(image)
-    dc.rectangle(
-        (width // 2, 0, width, height // 2),
-        fill=color2)
-    dc.rectangle(
-        (0, height // 2, width // 2, height),
-        fill=color2)
-    return image
-
-# Define the system tray icon
 def setup_tray():
-    # Create an image for the icon
-    icon_image = create_image(64, 64, 'blue', 'white')
-
-    items = get_devices()
-
+    global devices
+    devices = audioSwitch.MyAudioUtilities.getAllDevices("Output")
+    
     menu = []
 
-    # menu = (item(name, lambda item, id=index: set_device(id)) for index, name in enumerate(items))
-    for index, name in items.items():
-        menu.append(item(name["name"], lambda item, id=name["index"]: set_device(id)))
-    # Create the icon object
-    icon = pystray.Icon("test_icon", icon_image, "System Tray Icon", menu)
+    for device in devices:
+        print("DEVICE: " + device + " ID: " + devices[device])
+        menu.append(item(str(device), lambda _, id=str(device): set_device(id)))
 
-    # Run the icon loop in the background
+    menu.append(item('Exit', on_exit))
+
+    icon = pystray.Icon("test_icon", load_icon(), "switchAudioDevice", menu)
     icon.run()
 
-# Start the tray icon
 if __name__ == "__main__":
     setup_tray()
