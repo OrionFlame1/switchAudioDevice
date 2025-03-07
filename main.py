@@ -1,3 +1,4 @@
+import os
 import sys
 from comtypes import CLSCTX_ALL
 import pystray
@@ -20,7 +21,8 @@ def on_exit(icon):
     icon.stop() 
 
 def load_icon():
-    return Image.open("icon.ico")
+    icon_folder = os.path.join(sys._MEIPASS, 'static')
+    return Image.open(icon_folder + "\icon.ico")
 
 def setup_tray():
     global devices
@@ -37,5 +39,4 @@ def setup_tray():
     icon = pystray.Icon("test_icon", load_icon(), "switchAudioDevice", menu)
     icon.run()
 
-if __name__ == "__main__":
-    setup_tray()
+setup_tray()
