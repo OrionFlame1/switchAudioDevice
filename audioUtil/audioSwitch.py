@@ -3,8 +3,7 @@ import os
 import ctypes
 import comtypes
 from pycaw.constants import CLSID_MMDeviceEnumerator
-from pycaw.pycaw import (DEVICE_STATE, AudioUtilities, EDataFlow,
-                         IMMDeviceEnumerator)
+from pycaw.pycaw import (DEVICE_STATE, AudioUtilities, EDataFlow, IMMDeviceEnumerator)
 
 from . import policyconfig as pc
 
