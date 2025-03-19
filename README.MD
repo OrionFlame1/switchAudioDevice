@@ -16,7 +16,8 @@
     </li>
     <li><a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#installation">Building and Executing</a></li>
+        <li><a href="#installation">Executing only</a></li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
