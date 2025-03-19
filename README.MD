@@ -31,7 +31,7 @@ This is a project which its only purpose is to simplify the switching of audio d
 
 ## Getting Started
 
-### Installation
+### Building and Executing
 
 1. Clone the repo
    ```sh
@@ -59,9 +59,12 @@ This is a project which its only purpose is to simplify the switching of audio d
    pyinstaller --noconsole --clean --onefile --name "switchAudioDevice" --icon=static\icon.ico --add-binary "AudioDLL.dll;." --add-data "audioUtil;audioUtil" --add-data "static;static" --hidden-import=all main.py
    ```
 
+### Executing only
+Use the latest release to download only the executable without needing to get the repo and building it.
+
 ## Usage
 
-Simply right click on the newly appeared icon tray and select your preferred audio device at any time.
+Run the resulted executable file then simply right click on the newly appeared icon tray and select your preferred audio device at any time.
 
 ## Roadmap
 
